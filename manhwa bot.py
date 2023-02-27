@@ -123,4 +123,4 @@ def save_announced_chapters(announced_chapters):
     with open("announced_chapters.txt", "w") as f:
         f.write("\n".join(announced_chapters))
 
-client.run("MTA3OTQ0Mjg2MjI1ODc4NjM3NA.GzHaBP.VoC8fW1Zr3iXaKvRip3mQpg16xzgTkGUggKSuE")
+client.run("TOKEN")
