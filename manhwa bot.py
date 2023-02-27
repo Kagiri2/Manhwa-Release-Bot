@@ -2,6 +2,7 @@ import os
 import discord
 import requests
 import asyncio
+from googlesearch import search
 from bs4 import BeautifulSoup
 from discord import Intents
 
@@ -44,13 +45,20 @@ async def on_message(message):
 def get_latest_chapter(url):
     response = requests.get(url)
     soup = BeautifulSoup(response.content, "html.parser")
-    chapter_div = soup.find("div", class_="chaplist")
+    chapter_div = soup.find("div", class_="luf")
 
     if chapter_div is None:
         return None
 
     latest_chapter = chapter_div.find("a").text.strip()
-    latest_chapter_date = chapter_div.find("span").text.strip()
+    latest_chapter_date_span = chapter_div.find("span", class_="Manhwa")
+    
+    if latest_chapter_date_span is None:
+        return None
+
+    latest_chapter_date = latest_chapter_date_span.text.strip()
+    if "minutes" in latest_chapter_date:
+        return latest_chapter
 
     # Check if the latest chapter has already been announced
     announced_chapters = load_announced_chapters()
@@ -61,7 +69,10 @@ def get_latest_chapter(url):
     announced_chapters.append(latest_chapter)
     save_announced_chapters(announced_chapters)
 
-    return latest_chapter
+    return None
+
+
+
 
 def get_most_viewed_manga(url):
     response = requests.get(url)
@@ -78,11 +89,27 @@ def get_most_viewed_manga(url):
         manga_title = manga_item.find("a").text.strip()
     
         manga_image_url = manga_item.find("figure", class_="novel-cover").find("img")['src']
+
+        if "placeholder.png" in manga_image_url:
+            query = f"{manga_title} manga cover"
+            print(f"Searching for '{query}'...")
+            search_results = search(query, num_results=1)
+            if search_results:
+                first_result_url = search_results[0]
+                print(f"Got result: {first_result_url}")
+                response = requests.get(first_result_url)
+                google_search_soup = BeautifulSoup(response.content, "html.parser")
+                first_image_url = google_search_soup.find("img", class_="rg_i")
+                if first_image_url is not None:
+                    manga_image_url = first_image_url["src"]
+                    print(f"Using image URL: {manga_image_url}")
         mreader_manga_list += f"{manga_title} ({manga_image_url})\n"
 
-      
-
     return mreader_manga_list
+
+
+
+
 
 
 def load_announced_chapters():
@@ -96,4 +123,4 @@ def save_announced_chapters(announced_chapters):
     with open("announced_chapters.txt", "w") as f:
         f.write("\n".join(announced_chapters))
 
-client.run("token")
+client.run("MTA3OTQ0Mjg2MjI1ODc4NjM3NA.GzHaBP.VoC8fW1Zr3iXaKvRip3mQpg16xzgTkGUggKSuE")
