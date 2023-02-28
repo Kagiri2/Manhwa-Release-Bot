@@ -22,7 +22,7 @@ async def on_ready():
     while True:
         asura_chapter = get_latest_chapter(ASURA_URL)
         reaper_chapter = get_latest_chapter(REAPER_URL)
-
+        
         if asura_chapter is not None:
             await client.wait_until_ready()
             await client.get_channel(1075279391992598591).send(f"Asura Scans released chapter {asura_chapter}.")
@@ -37,12 +37,42 @@ async def on_message(message):
 
  
     print(repr(message.content))
-    if message.content == '.ping':
+    if message.content == '.top':
    
         mreader_manga_list = get_most_viewed_manga(MREADER_URL)
         await client.get_channel(1075279391992598591).send(f"Most viewed manga on mreader today:\n\n{mreader_manga_list}")
+    if message.content.startswith('.find'):
+        query = message.content[7:]
+        query_url = f"https://www.google.com/search?q={query}&tbm=isch"
+
+        # Send a GET request to Google with the search query
+        headers = {'User-Agent': 'Mozilla/5.0'}
+        response = requests.get(query_url, headers=headers)
+
+        # Parse the response HTML with Beautiful Soup
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        # Find the first image result URL and send it as an attachment
+        for img in soup.find_all('img'):
+            img_url = img.get('src')
+            if img_url.startswith("https://"):
+                break
+        
+        if img_url:
+            # Send the image as a message attachment
+            r = requests.get(img_url)
+            with open('image.jpg', 'wb') as f:
+                f.write(r.content)
+            with open('image.jpg', 'rb') as f:
+                await client.get_channel(1075279391992598591).send(file=discord.File(f))
+            os.remove('image.jpg')
+        else:
+            await client.get_channel(1075279391992598591).send("No image found.")
+
+
 
 def get_latest_chapter(url):
+    
     response = requests.get(url)
     soup = BeautifulSoup(response.content, "html.parser")
     chapter_div = soup.find("div", class_="luf")
@@ -55,8 +85,9 @@ def get_latest_chapter(url):
     
     if latest_chapter_date_span is None:
         return None
-
+    print(1)
     latest_chapter_date = latest_chapter_date_span.text.strip()
+    print(latest_chapter_date)
     if "minutes" in latest_chapter_date:
         return latest_chapter
 
@@ -87,25 +118,15 @@ def get_most_viewed_manga(url):
 
     for manga_item in manga_items:
         manga_title = manga_item.find("a").text.strip()
-    
-        manga_image_url = manga_item.find("figure", class_="novel-cover").find("img")['src']
+        
 
-        if "placeholder.png" in manga_image_url:
-            query = f"{manga_title} manga cover"
-            print(f"Searching for '{query}'...")
-            search_results = search(query, num_results=1)
-            if search_results:
-                first_result_url = search_results[0]
-                print(f"Got result: {first_result_url}")
-                response = requests.get(first_result_url)
-                google_search_soup = BeautifulSoup(response.content, "html.parser")
-                first_image_url = google_search_soup.find("img", class_="rg_i")
-                if first_image_url is not None:
-                    manga_image_url = first_image_url["src"]
-                    print(f"Using image URL: {manga_image_url}")
-        mreader_manga_list += f"{manga_title} ({manga_image_url})\n"
+        mreader_manga_list += f"{manga_title} \n"
+       
+    
 
     return mreader_manga_list
+
+
 
 
 
