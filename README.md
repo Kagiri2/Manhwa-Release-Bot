@@ -9,3 +9,8 @@ Usage:
 
 .top -> Most viewed manga on Mreader today\
 .find -> Find an image of a manga/anime\
+
+How to use:
+
+Change the Channel ID in the portion of the code to the discord channel you want to bot to be on.
+
