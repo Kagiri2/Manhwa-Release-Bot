@@ -41,29 +41,29 @@ async def on_message(message):
    
         mreader_manga_list = get_most_viewed_manga(MREADER_URL)
         await client.get_channel(1075279391992598591).send(f"Most viewed manga on mreader today:\n\n{mreader_manga_list}")
-    # if message.content.startswith('.find'):
-    #     query = message.content[7:]
-    #     query_url = f"https://www.google.com/search?q={query}&tbm=isch"
-    #
-    #     headers = {'User-Agent': 'Mozilla/5.0'}
-    #     response = requests.get(query_url, headers=headers)
-    #
-    #     soup = BeautifulSoup(response.text, "html.parser")
-    #
-    #     for img in soup.find_all('img'):
-    #         img_url = img.get('src')
-    #         if img_url.startswith("https://"):
-    #             break
-    #
-    #     if img_url:
-    #         r = requests.get(img_url)
-    #         with open('image.jpg', 'wb') as f:
-    #             f.write(r.content)
-    #         with open('image.jpg', 'rb') as f:
-    #             await client.get_channel(1075279391992598591).send(file=discord.File(f))
-    #         os.remove('image.jpg')
-    #     else:
-    #         await client.get_channel(1075279391992598591).send("No image found.")
+    if message.content.startswith('.find'):
+         query = message.content[7:]
+         query_url = f"https://www.google.com/search?q={query}&tbm=isch"
+    
+         headers = {'User-Agent': 'Mozilla/5.0'}
+         response = requests.get(query_url, headers=headers)
+    
+         soup = BeautifulSoup(response.text, "html.parser")
+    
+         for img in soup.find_all('img'):
+             img_url = img.get('src')
+             if img_url.startswith("https://"):
+                 break
+    
+         if img_url:
+             r = requests.get(img_url)
+             with open('image.jpg', 'wb') as f:
+                 f.write(r.content)
+             with open('image.jpg', 'rb') as f:
+                 await client.get_channel(1075279391992598591).send(file=discord.File(f))
+             os.remove('image.jpg')
+         else:
+             await client.get_channel(1075279391992598591).send("No image found.")
 
 
 
