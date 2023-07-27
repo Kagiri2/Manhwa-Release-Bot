@@ -7,4 +7,5 @@ These websites include Reaper, Asura, Luminous, Flame, Void, and MM.
 
 Usage:
 
-.ping -> Most viewed manga on mreader today
+.top -> Most viewed manga on Mreader today
+.find -> Find an image of a manga/anime
