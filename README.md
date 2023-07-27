@@ -2,10 +2,10 @@
 
 A personal project of mine to keep track of all my favorite manhwas. 
 ______________________________________
-Manhwa Releases Bot is a discord bot that I made to track new manhwa releases from popular scanlation wewbsites.
+Manhwa Releases Bot is a discord bot that I made to track new manhwa releases from popular scanlation websites.
 These websites include Reaper, Asura, Luminous, Flame, Void, and MM.
 
 Usage:
 
-.top -> Most viewed manga on Mreader today
+.top -> Most viewed manga on Mreader today*
 .find -> Find an image of a manga/anime
