@@ -119,7 +119,7 @@ def get_most_viewed_manga(url):
         manga_title = manga_title.replace("Ongoing", "").strip()
         # Replace spaces with hyphens in the manga title to form a valid URL
         manga_url_title = manga_title.replace(" ", "-")
-        
+        manga_url_title = manga_url_title.replace("’", "")
         # Concatenate the manga title and URL in the same iteration using manga_url_title
         mreader_manga_list += f"{manga_title}: https://www.mangageko.com/manga/{manga_url_title.lower()}/\n"
         
@@ -147,4 +147,4 @@ def save_announced_chapters(announced_chapters):
     with open("announced_chapters.txt", "w") as f:
         f.write("\n".join(announced_chapters))
 
-client.run(TOKEN)
+client.run('TOKEN')
