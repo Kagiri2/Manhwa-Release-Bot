@@ -41,12 +41,14 @@ async def on_message(message):
    
         mreader_manga_list = get_most_viewed_manga(MREADER_URL)
         await client.get_channel(1075279391992598591).send(f"Most viewed manga on mreader today:\n\n{mreader_manga_list}")
+
     if message.content.startswith('.search'):
         searchquery = message.content[8:]
-        manga_url_title = searchquery.replace(" ", "-")
+        manga_url_title = searchquery.replace(" ", "_")
         manga_url_title = manga_url_title.replace("’", "")
+        await client.get_channel(1075279391992598591).send(f"https://fanfox.net/manga/{manga_url_title.lower()}/\n")
+       
         
-        await client.get_channel(1075279391992598591).send(f"https://www.mangageko.com/manga/{manga_url_title.lower()}/\n")
     if message.content.startswith('.find'):
          query = message.content[7:]
          query_url = f"https://www.google.com/search?q={query}&tbm=isch"
@@ -130,12 +132,14 @@ def get_most_viewed_manga(url):
         mreader_manga_list += f"{manga_title}: https://www.mangageko.com/manga/{manga_url_title.lower()}/\n"
         
     
-       
-    
 
     return mreader_manga_list
 
 
+
+    
+
+    
 
 
 
@@ -153,4 +157,4 @@ def save_announced_chapters(announced_chapters):
     with open("announced_chapters.txt", "w") as f:
         f.write("\n".join(announced_chapters))
 
-client.run('token')
+client.run('TOKEN')
